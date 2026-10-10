@@ -21,3 +21,13 @@ $('#profileForm').onsubmit=e=>{e.preventDefault();let d=new FormData(e.currentTa
 try{let p=JSON.parse(localStorage.getItem(PROFILE)||'{}');$('#profileForm').elements.displayName.value=p.displayName||'';$('#profileForm').elements.genre.value=p.genre||'Romance';$('#profileForm').elements.language.value=p.language||'Español';$('#profileName').textContent=p.displayName||'Viajero de Yume'}catch{}
 renderCatalog();renderMine();renderPersonas();timer();setInterval(timer,1000);
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+// Interacciones de la pantalla de bienvenida
+const welcomeScreen=$('#welcomeScreen'),enterYumeButton=$('#enterYumeButton'),welcomeMenuButton=$('#welcomeMenuButton'),welcomeMenu=$('#welcomeMenu');
+enterYumeButton?.addEventListener('click',()=>{document.body.classList.remove('welcome-open');welcomeScreen?.classList.add('welcome-dismissed');welcomeScreen?.setAttribute('aria-hidden','true');$('.app-shell').style.visibility='visible';$('.app-shell').style.pointerEvents='auto';window.scrollTo({top:0,behavior:'smooth'});});
+welcomeMenuButton?.addEventListener('click',()=>{const opening=welcomeMenu.hasAttribute('hidden');welcomeMenu.toggleAttribute('hidden',!opening);welcomeMenuButton.setAttribute('aria-expanded',String(opening));});
+welcomeMenu?.querySelectorAll('[data-welcome-menu]').forEach(b=>b.addEventListener('click',()=>{const messages={about:'Yume es un espacio para crear personajes e imaginar historias.',privacy:'En esta versión, tus creaciones y preferencias se guardan en este dispositivo.',help:'Entrá a Yume para explorar las secciones disponibles.'};welcomeMenu.setAttribute('hidden','');welcomeMenuButton.setAttribute('aria-expanded','false');toast(messages[b.dataset.welcomeMenu]||'¡Bienvenido a Yume!');}));
+$('#googleSignInButton')?.addEventListener('click',()=>toast('El inicio de sesión con Google todavía debe configurarse con un servicio de autenticación.'));
+
+// Partículas mágicas violetas: decorativas, ligeras y separadas de la ilustración.
+const particleLayer=$('#welcomeParticles');
+if(particleLayer){for(let i=0;i<25;i++){const p=document.createElement('i');p.className='welcome-particle';p.style.left=(3+Math.random()*94)+'%';p.style.setProperty('--size',(2+Math.random()*4)+'px');p.style.setProperty('--duration',(9+Math.random()*12)+'s');p.style.setProperty('--delay',(-Math.random()*18)+'s');p.style.setProperty('--drift',(-35+Math.random()*70)+'px');particleLayer.appendChild(p)}}

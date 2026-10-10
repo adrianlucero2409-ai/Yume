@@ -13,3 +13,6 @@ LIMITACIONES IMPORTANTES:
 - El cronómetro promocional es demostrativo y no valida pagos o suscripciones.
 
 Publicación inicial sugerida: GitHub Pages o un hosting HTTPS compatible con aplicaciones web estáticas.
+
+YUME 0.5 - BIENVENIDA
+La pantalla inicial usa yume-welcome.png como ilustración, añade partículas violetas animadas y controles HTML independientes. El botón de entrada abre el menú principal existente. El botón de Google es visual y muestra un aviso: para autenticar cuentas reales hay que configurar un proveedor de identidad.
