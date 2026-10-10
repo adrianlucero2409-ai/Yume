@@ -23,7 +23,36 @@ renderCatalog();renderMine();renderPersonas();timer();setInterval(timer,1000);
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 // Interacciones de la pantalla de bienvenida
 const welcomeScreen=$('#welcomeScreen'),enterYumeButton=$('#enterYumeButton'),welcomeMenuButton=$('#welcomeMenuButton'),welcomeMenu=$('#welcomeMenu');
-enterYumeButton?.addEventListener('click',()=>{document.body.classList.remove('welcome-open');welcomeScreen?.classList.add('welcome-dismissed');welcomeScreen?.setAttribute('aria-hidden','true');$('.app-shell').style.visibility='visible';$('.app-shell').style.pointerEvents='auto';window.scrollTo({top:0,behavior:'smooth'});});
+// Transición mágica de entrada: destello violeta + fundido suave.
+const welcomeTransitionStyle=document.createElement('style');
+welcomeTransitionStyle.textContent=`
+  #welcomeScreen{transition:opacity .82s ease,transform .82s ease,filter .82s ease}
+  .app-shell{transition:opacity .62s ease,transform .62s ease}
+  body.yume-entering #welcomeScreen{opacity:0;transform:scale(1.025);filter:brightness(1.25)}
+  body.yume-entering .app-shell{opacity:0;transform:translateY(9px)}
+  body.yume-menu-reveal .app-shell{opacity:1;transform:translateY(0)}
+  body.yume-entering::after{content:"";position:fixed;inset:0;z-index:99999;pointer-events:none;background:radial-gradient(circle at 50% 55%,rgba(205,150,255,.72),rgba(126,65,220,.38) 35%,rgba(28,10,58,.92) 100%);animation:yumeMagicFlash .86s ease forwards}
+  @keyframes yumeMagicFlash{0%{opacity:0}22%{opacity:1}62%{opacity:.78}100%{opacity:0}}
+  @media(prefers-reduced-motion:reduce){#welcomeScreen,.app-shell{transition-duration:.01ms!important}body.yume-entering::after{animation-duration:.01ms!important}}
+`;
+document.head.appendChild(welcomeTransitionStyle);
+
+enterYumeButton?.addEventListener('click',()=>{
+  if(enterYumeButton.dataset.entering==='true')return;
+  enterYumeButton.dataset.entering='true';
+  enterYumeButton.setAttribute('aria-busy','true');
+  document.body.classList.add('yume-entering');
+  setTimeout(()=>{
+    document.body.classList.remove('welcome-open','yume-entering');
+    document.body.classList.add('yume-menu-reveal');
+    welcomeScreen?.classList.add('welcome-dismissed');
+    welcomeScreen?.setAttribute('aria-hidden','true');
+    const appShell=$('.app-shell');
+    if(appShell){appShell.style.visibility='visible';appShell.style.pointerEvents='auto'}
+    window.scrollTo({top:0,behavior:'smooth'});
+    enterYumeButton.removeAttribute('aria-busy');
+  },860);
+});
 welcomeMenuButton?.addEventListener('click',()=>{const opening=welcomeMenu.hasAttribute('hidden');welcomeMenu.toggleAttribute('hidden',!opening);welcomeMenuButton.setAttribute('aria-expanded',String(opening));});
 welcomeMenu?.querySelectorAll('[data-welcome-menu]').forEach(b=>b.addEventListener('click',()=>{const messages={about:'Yume es un espacio para crear personajes e imaginar historias.',privacy:'En esta versión, tus creaciones y preferencias se guardan en este dispositivo.',help:'Entrá a Yume para explorar las secciones disponibles.'};welcomeMenu.setAttribute('hidden','');welcomeMenuButton.setAttribute('aria-expanded','false');toast(messages[b.dataset.welcomeMenu]||'¡Bienvenido a Yume!');}));
 $('#googleSignInButton')?.addEventListener('click',()=>toast('El inicio de sesión con Google todavía debe configurarse con un servicio de autenticación.'));
