@@ -54,8 +54,7 @@ enterYumeButton?.addEventListener('click',()=>{
   },860);
 });
 welcomeMenuButton?.addEventListener('click',()=>{const opening=welcomeMenu.hasAttribute('hidden');welcomeMenu.toggleAttribute('hidden',!opening);welcomeMenuButton.setAttribute('aria-expanded',String(opening));});
-welcomeMenu?.querySelectorAll('[data-welcome-menu]').forEach(b=>b.addEventListener('click',()=>{const messages={about:'Yume es un espacio para crear personajes e imaginar historias.',privacy:'En esta versión, tus creaciones y preferencias se guardan en este dispositivo.',help:'Entrá a Yume para explorar las secciones disponibles.'};welcomeMenu.setAttribute('hidden','');welcomeMenuButton.setAttribute('aria-expanded','false');toast(messages[b.dataset.welcomeMenu]||'¡Bienvenido a Yume!');}));
-$('#googleSignInButton')?.addEventListener('click',()=>toast('El inicio de sesión con Google todavía debe configurarse con un servicio de autenticación.'));
+welcomeMenu?.querySelectorAll('[data-welcome-menu]').forEach(b=>b.addEventListener('click',()=>{const messages={about:'Yume es un espacio para crear personajes e imaginar historias.',privacy:'En esta versión, tus creaciones y preferencias se guardan en este dispositivo.',help:'Entrá a Yume para explorar las secciones disponibles.'};welcomeMenu.setAttribute('hidden','');welcomeMenuButton.setAttribute('aria-expanded','false');toast(messages[b.dataset.welcomeMenu]||'¡Bienvenido a Yume!');}))
 
 // Partículas mágicas violetas: decorativas, ligeras y separadas de la ilustración.
 const particleLayer=$('#welcomeParticles');
