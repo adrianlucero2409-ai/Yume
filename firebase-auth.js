@@ -1,20 +1,29 @@
 
+import { auth, googleProvider } from "./firebase.js";
+import {
+  signInWithPopup,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+const googleButton = document.getElementById("googleSignInButton");
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDmGBL0pDqcW8EyzE5BfZVlolNBjNRzhmc",
-  authDomain: "yume-f41ae.firebaseapp.com",
-  projectId: "yume-f41ae",
-  storageBucket: "yume-f41ae.firebasestorage.app",
-  messagingSenderId: "357238721312",
-  appId: "1:357238721312:web:1b4981406d5f17847f2545",
-  measurementId: "G-EH6FPWVVH5"
-};
+if (googleButton) {
+  googleButton.addEventListener("click", async (event) => {
+    event.preventDefault();
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      alert("¡Bienvenido a Yume, " + (result.user.displayName || "viajero") + "!");
+    } catch (error) {
+      console.error(error);
+      alert("Error al iniciar sesión: " + error.code);
+    }
+  });
+}
 
-export { app, auth, googleProvider };
+onAuthStateChanged(auth, (user) => {
+  if (user && googleButton) {
+    googleButton.innerHTML =
+      '<span class="google-g">G</span><span>Sesión iniciada</span>';
+  }
+});
